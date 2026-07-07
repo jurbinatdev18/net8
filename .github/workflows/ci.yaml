@@ -29,8 +29,7 @@ jobs:
       - name: Build
         run: |
           dotnet build ${{ env.API_PROJECT }} \
-            --configuration ${{ env.BUILD_CONFIGURATION }} \
-            --no-restore
+            --configuration ${{ env.BUILD_CONFIGURATION }} --no-restore
 
       # Uncomment if you have a test project
       #

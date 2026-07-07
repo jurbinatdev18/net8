@@ -1,0 +1,61 @@
+name: Build and Publish
+
+on:
+  workflow_dispatch: # Manual trigger only (equivalent to trigger: none)
+
+env:
+  BUILD_CONFIGURATION: Release
+  API_PROJECT: WebApplication1.csproj
+  ARTIFACT_NAME: drop
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+          include-prerelease: true
+
+      # Restore packages (optional but recommended)
+      - name: Restore dependencies
+        run: dotnet restore ${{ env.API_PROJECT }}
+
+      - name: Build
+        run: |
+          dotnet build ${{ env.API_PROJECT }} \
+            --configuration ${{ env.BUILD_CONFIGURATION }} \
+            --no-restore
+
+      # Uncomment if you have a test project
+      #
+      # - name: Test
+      #   run: |
+      #     dotnet test WebApplication1.Tests.csproj \
+      #       --configuration ${{ env.BUILD_CONFIGURATION }} \
+      #       --no-build \
+      #       --logger trx \
+      #       --collect:"XPlat Code Coverage"
+
+      - name: Publish
+        run: |
+          dotnet publish ${{ env.API_PROJECT }} `
+            --configuration ${{ env.BUILD_CONFIGURATION }} `
+            --output ${{ github.workspace }}\publish
+
+      - name: Compress published output
+        run: |
+          Compress-Archive `
+            -Path "${{ github.workspace }}\publish\*" `
+            -DestinationPath "${{ github.workspace }}\${{ env.ARTIFACT_NAME }}.zip"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ${{ github.workspace }}\${{ env.ARTIFACT_NAME }}.zip

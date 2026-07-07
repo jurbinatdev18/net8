@@ -1,0 +1,78 @@
+# azure-pipelines.yml
+
+# 1. Trigger the pipeline automatically on every commit to the 'main' branch.
+#trigger:
+#- main
+
+trigger: none # Disable CI triggers.1111111111111
+
+# Define the build agent. Using a Microsoft-hosted Windows agent is a good choice for .NET projects.
+pool:
+  vmImage: 'windows-latest'
+
+# Define variables for configuration, making it easy to change later if needed.
+variables:
+  buildConfiguration: 'Release'
+  # Path to the .csproj file for the API. Adjust this if the file path is different.
+  apiProject: 'WebApplication1.csproj'
+  # Path to the .csproj file for the unit tests. Adjust this if the file path is different.
+#  testProject: 'myapi.Test.csproj'
+  # The name of the artifact to be published for the CD process.
+  artifactName: 'drop'
+
+jobs:
+- job: BuildAndTest
+  displayName: 'Build and Test Job'
+
+  steps:
+  # 2. Restore NuGet packages.
+ 
+  - task: UseDotNet@2
+    displayName: 'Install .NET Core SDK'
+    inputs:
+      version: 8.x
+      performMultiLevelLookup: true
+      includePreviewVersions: true # Required for preview versions
+ 
+ # - task: NuGetToolInstaller@1
+ #   inputs:
+ #     versionSpec: '*'
+ #     checkLatest: true
+
+ # - task: DotNetCoreCLI@2
+ #   displayName: 'Restore'
+ #   inputs:
+ #     command: 'restore'
+ #     projects: '$(apiProject)'
+
+  # 3. Build the project in Release mode.
+  - task: DotNetCoreCLI@2
+    displayName: 'Build'
+    inputs:
+      command: 'build'
+      projects: '$(apiProject)'
+      arguments: '--configuration $(buildConfiguration)'
+
+  # 4. Run unit tests and publish test results.
+ # - task: DotNetCoreCLI@2
+ #   displayName: 'Test'
+ #   inputs:
+ ##     command: 'test'
+ #     projects: '$(testProject)'
+ #     arguments: '--configuration $(buildConfiguration) --collect "Code coverage" --logger trx'
+
+#  # 5. Publish the build artifact for deployment.
+  - task: DotNetCoreCLI@2
+    displayName: 'Publish'
+    inputs:
+      command: 'publish'
+      publishWebProjects: true
+      arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+      zipAfterPublish: true
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact'
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: '$(artifactName)'
+      publishLocation: 'Container'

@@ -1,0 +1,11 @@
+C:\Users\JHONATAN\Desktop\myapi\publish\WebApplication1.exe
+C:\Users\JHONATAN\Desktop\myapi\publish\appsettings.Development.json
+C:\Users\JHONATAN\Desktop\myapi\publish\appsettings.json
+C:\Users\JHONATAN\Desktop\myapi\publish\WebApplication1.dll
+C:\Users\JHONATAN\Desktop\myapi\publish\WebApplication1.deps.json
+C:\Users\JHONATAN\Desktop\myapi\publish\WebApplication1.runtimeconfig.json
+C:\Users\JHONATAN\Desktop\myapi\publish\WebApplication1.pdb
+C:\Users\JHONATAN\Desktop\myapi\publish\Microsoft.OpenApi.dll
+C:\Users\JHONATAN\Desktop\myapi\publish\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\JHONATAN\Desktop\myapi\publish\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\JHONATAN\Desktop\myapi\publish\Swashbuckle.AspNetCore.SwaggerUI.dll
